@@ -7,73 +7,89 @@ namespace TicTacToe
     {
         static void Main(string[] args)
         {
-            List<char> board = new List<char> 
-                {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
-            bool isGameOver = false;
-            bool isWinner = false;
-            char player = '-';
-            do
-            {
-
-                for (int turn = 0; turn < 9; turn++)
+            string playAgain = "yes";
+            while (playAgain.ToLower() == "yes")
+            {                
+                List<char> board = new List<char> 
+                    {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+                bool isGameOver = false;
+                bool isWinner = false;
+                char player = '-';
+                while (!isGameOver)
                 {
-                    bool isTurnOver = false;
-                    // Display Board
-                    if (turn != 0) 
-                    {
-                        Console.WriteLine();
-                    }
-                    displayBoard(board);
 
-                    // Determine player
-                    if ((turn % 2) == 0)                    
+                    for (int turn = 0; turn < 9; turn++)
                     {
-                        player = 'x';
-                    }
-                    else
-                    {
-                        player = 'o';
-                    }
-
-                    // Prompt for move
-                    while (!isTurnOver)
-                    {
-                        Console.Write($"\n{player}'s turn to chose a square");
-                            Console.Write(" (1-9): "); // 80 char limit.
-                        string choice = Console.ReadLine();
-                        bool isValid = false;
-                        while (!isValid)
+                        if (isGameOver)
                         {
-                            isValid = validSquareChecker(choice, board);
-                            if (isValid)
-                            {
-                                int square = int.Parse(choice) - 1;
-                                board[square] = player; // Place mark on board
-                                isTurnOver = true;
-                            }
-                            else
-                            {
-                                Console.Write($"Sorry; '{choice}' isn't a");
-                                Console.WriteLine(" valid square.");
-                            }
-                        } // exit while(!isValid) loop
-                    } // exit isTurnOver loop
+                            break;
 
-                    isWinner = endgameChecker(board);
-                    if (isWinner)
+                        }
+                        bool isTurnOver = false;
+                        // Display Board
+                        if (turn != 0) 
+                        {
+                            Console.WriteLine();
+                        }
+                        displayBoard(board);
+
+                        // Determine player
+                        if ((turn % 2) == 0)                    
+                        {
+                            player = 'x';
+                        }
+                        else
+                        {
+                            player = 'o';
+                        }
+
+                        // Prompt for move
+                        while (!isTurnOver)
+                        {
+                            Console.Write($"\n{player}'s turn to chose a square");
+                                Console.Write(" (1-9): "); // 80 char limit.
+                            string choice = Console.ReadLine();
+                            bool isValid = false;
+                            while (!isValid)
+                            {
+                                isValid = validSquareChecker(choice, board);
+                                if (isValid)
+                                {
+                                    int square = int.Parse(choice) - 1;
+                                    board[square] = player; // Place mark on board
+                                    isTurnOver = true;
+                                }
+                                else
+                                {
+                                    Console.Write($"Sorry; '{choice}' isn't a");
+                                    Console.WriteLine(" valid square.");
+                                }
+                            } // exit while(!isValid) loop
+                        } // exit isTurnOver loop
+
+                        isWinner = endgameChecker(board);
+                        if (isWinner)
+                        {
+                            isGameOver = true;
+                            Console.WriteLine($"Congratulations! {player}'s wins!");
+                        }
+
+                    } // exit "turn" for loop
+                    if (!isWinner)
                     {
                         isGameOver = true;
-                        Console.WriteLine($"Congratulations! {player}'s wins!");
+                        Console.WriteLine("There was no winner. Thanks for playing!\n");
                     }
 
-                } // exit "turn" for loop
-                if (!isWinner)
-                {
-                    isGameOver = true;
-                    Console.WriteLine("There was no winner. Thanks for playing!\n");
-                }
+                } // exit while (!isGameOver) loop
 
-            } while (isGameOver); // exit do-while (!isGameOver) loop
+                Console.Write("Would you like to play again? (yes/no) ");
+                playAgain = Console.ReadLine();
+                if (playAgain.ToLower() == "yes")
+                {
+                    Console.WriteLine();
+                }
+            } // exit while (playAgain)
             // Write your code here
         } // exit main()
 
