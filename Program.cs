@@ -10,13 +10,19 @@ namespace TicTacToe
             List<char> board = new List<char> 
                 {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
             bool isGameOver = false;
+            bool isWinner = false;
             char player = '-';
-            while (!isGameOver)
+            do
             {
 
-                for (int turn = 0; turn > 9; turn++)
+                for (int turn = 0; turn < 9; turn++)
                 {
+                    bool isTurnOver = false;
                     // Display Board
+                    if (turn != 0) 
+                    {
+                        Console.WriteLine();
+                    }
                     displayBoard(board);
 
                     // Determine player
@@ -30,18 +36,18 @@ namespace TicTacToe
                     }
 
                     // Prompt for move
-                    bool isTurnOver = false;
                     while (!isTurnOver)
                     {
-                        Console.Write($"{player}'s turn to chose a square");
-                        Console.Write(" (1-9): "); // 80 char limit.
+                        Console.Write($"\n{player}'s turn to chose a square");
+                            Console.Write(" (1-9): "); // 80 char limit.
                         string choice = Console.ReadLine();
-                        bool isValid = validSquareChecker(choice, board);
+                        bool isValid = false;
                         while (!isValid)
                         {
+                            isValid = validSquareChecker(choice, board);
                             if (isValid)
                             {
-                                int square = int.Parse(choice);
+                                int square = int.Parse(choice) - 1;
                                 board[square] = player; // Place mark on board
                                 isTurnOver = true;
                             }
@@ -50,12 +56,24 @@ namespace TicTacToe
                                 Console.Write($"Sorry; '{choice}' isn't a");
                                 Console.WriteLine(" valid square.");
                             }
-                        }
-                    }// exit isTurnOver loop
-                    // isGameOver = endgameChecker(board);
+                        } // exit while(!isValid) loop
+                    } // exit isTurnOver loop
+
+                    isWinner = endgameChecker(board);
+                    if (isWinner)
+                    {
+                        isGameOver = true;
+                        Console.WriteLine($"Congratulations! {player}'s wins!");
+                    }
 
                 } // exit "turn" for loop
-            } // exit while (!isGameOver) loop
+                if (!isWinner)
+                {
+                    isGameOver = true;
+                    Console.WriteLine("There was no winner. Thanks for playing!\n");
+                }
+
+            } while (isGameOver); // exit do-while (!isGameOver) loop
             // Write your code here
         } // exit main()
 
@@ -66,7 +84,7 @@ namespace TicTacToe
                 int j = i * 3;
                 string line;
                 line = $"{board[(j + 0)]}|{board[(j + 1)]}|{board[(j + 2)]}";
-                // Would combine lines 84 & 85, if not for 80 char limit.
+                // ^^^Would combine those two lines, if not for 80 char limit.
                 Console.WriteLine(line);
                 if (i != 2)
                 {
@@ -78,12 +96,63 @@ namespace TicTacToe
 
         static bool endgameChecker(List<char> board)
         {
-            bool isOver;
-            // VVV Placeholder until I fill in the code.
-            isOver = true;
+            // Assume game is not over.
+            bool isWinner = false;
+            
+            // Are any of the rows the same?
+            for (int i = 0; i < 3; i++)
+            {
+                int j = i * 3;
+                int col1 = j;
+                int col2 = j + 1;
+                int col3 = j + 2; 
+                if (board[col1] == board[col2] &&
+                 board[col2] == board[col3])
+                {
+                    isWinner = true;
+                    break;
+                }
+            } // exit row loop
 
+            // If there wasn't a winner yet...
+            if (!isWinner)
+            {
+                // ...are any of the columns the same?
+                for (int i = 0; i < 3; i++)
+                {
+                    int row1 = i;
+                    int row2 = i + 3;
+                    int row3 = i + 6;
+                    if (board[row1] == board[row2] &&
+                    board[row2] == board[row3])
+                    {
+                        isWinner = true;
+                        break;
+                    }
+                } // exit column loop
 
-            return isOver;
+                if (!isWinner)
+                {
+                    // Check for \ pattern
+                    if (board[0] == board[4] && board[4] == board[8])
+                    {
+                        isWinner = true;
+                    }
+
+                    if (!isWinner)
+                    {
+                        // check for / pattern (Last condition for winners)
+                        if (board[2] == board[4] && board[4] == board[6])
+                        {
+                            isWinner = true;
+                        }//exit / win condition
+                    } // exit \ win condition 
+                } // exit column win condition
+            } // exit row win condition
+
+            // Is it a tie?
+            // TAKEN CARE OF WITH TURNS LOOP
+            return isWinner;
         } // exit endgameChecker()
 
         static bool validSquareChecker(string choice, List<char> board)
@@ -110,7 +179,7 @@ namespace TicTacToe
             if (subject > 0 && subject < 10)
             {
                 // 2) Is it a number hasn't been chosen yet
-                char i = board[subject];
+                char i = board[subject - 1];
                 if (i != 'x' && i != 'o')
                 {
                     isValidSquare = true; // Is valid.
