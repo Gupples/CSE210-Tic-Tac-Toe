@@ -67,7 +67,7 @@ namespace TicTacToe
                             } // exit while(!isValid) loop
                         } // exit isTurnOver loop
 
-                        isWinner = endgameChecker(board);
+                        isWinner = winnerCheck(board);
                         if (isWinner)
                         {
                             isGameOver = true;
@@ -78,23 +78,27 @@ namespace TicTacToe
                     if (!isWinner)
                     {
                         isGameOver = true;
-                        Console.WriteLine("There was no winner. Thanks for playing!\n");
+                        Console.WriteLine("There was no winner.");
                     }
 
                 } // exit while (!isGameOver) loop
 
-                Console.Write("Would you like to play again? (yes/no) ");
+                Console.Write("\nWould you like to play again? (yes/no) ");
                 playAgain = Console.ReadLine();
                 if (playAgain.ToLower() == "yes")
                 {
                     Console.WriteLine();
                 }
             } // exit while (playAgain)
-            // Write your code here
+
+            // Thank the user for playing
+            Console.WriteLine("Thank you for playing!\n");
+
         } // exit main()
 
         static void displayBoard(List<char> board)
         {
+            // draw row by row
             for (int i = 0; i < 3; i++)
             {
                 int j = i * 3;
@@ -102,6 +106,7 @@ namespace TicTacToe
                 line = $"{board[(j + 0)]}|{board[(j + 1)]}|{board[(j + 2)]}";
                 // ^^^Would combine those two lines, if not for 80 char limit.
                 Console.WriteLine(line);
+                // This next part isn't needed on the bottom line
                 if (i != 2)
                 {
                     Console.WriteLine("-+-+-");
@@ -110,7 +115,7 @@ namespace TicTacToe
 
         } // exit displayBoard() 
 
-        static bool endgameChecker(List<char> board)
+        static bool winnerCheck(List<char> board)
         {
             // Assume game is not over.
             bool isWinner = false;
@@ -169,7 +174,7 @@ namespace TicTacToe
             // Is it a tie?
             // TAKEN CARE OF WITH TURNS LOOP
             return isWinner;
-        } // exit endgameChecker()
+        } // exit winnerCheck()
 
         static bool validSquareChecker(string choice, List<char> board)
         {
