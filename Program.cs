@@ -46,12 +46,12 @@ namespace TicTacToe
                         // Prompt for move
                         while (!isTurnOver)
                         {
-                            Console.Write($"\n{player}'s turn to chose a square");
-                                Console.Write(" (1-9): "); // 80 char limit.
-                            string choice = Console.ReadLine();
                             bool isValid = false;
                             while (!isValid)
                             {
+                                Console.Write($"\n{player}'s turn to chose a square");
+                                    Console.Write(" (1-9): "); // 80 char limit.
+                                string choice = Console.ReadLine();
                                 isValid = validSquareChecker(choice, board);
                                 if (isValid)
                                 {
